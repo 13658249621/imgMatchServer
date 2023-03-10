@@ -1,3 +1,5 @@
+import os
+
 import cv2
 
 # 特征点匹配,已成功获取坐标
@@ -36,7 +38,8 @@ def feature_matching():
     print(x, y)
     # 将坐标位置勾画在2.png图片上，并显示
     cv2.rectangle(tem, (int(x), int(y)), (int(x) + 30, int(y) + 30), (0, 0, 255), 5)
-    cv2.imshow("output", tem)
+    cv2.imwrite('识别结果.jpg', tem)
+    cv2.imshow("output.jpg", tem)
     cv2.waitKey()
 
 

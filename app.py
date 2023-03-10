@@ -2,7 +2,6 @@ import os
 
 from flask import Flask, request
 import cv2
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -21,7 +20,6 @@ def upload():
         return "请求方式错误"
     elif request.method == "POST":
         m_dict = request.files
-        print(m_dict)
         k = 0
         """
         遍历文件列表，读取文件存放本地
@@ -101,7 +99,6 @@ def template_matching(templatePicPath, targetPicPath):
 
 
 def feature_matching(templatePicPath, targetPicPath):
-    print(templatePicPath)
     tem = cv2.imread(templatePicPath)
     tar = cv2.imread(targetPicPath)
 
@@ -140,6 +137,13 @@ def feature_matching(templatePicPath, targetPicPath):
     # DMatch.trainIdx - 训练描述符中描述符的索引
     # DMatch.queryIdx - 查询描述符中描述符的索引
     # DMatch.imgIdx - 训练图像的索引。
+    """
+    matches是DMatch对象，具有以下属性：
+    DMatch.distance - 描述符之间的距离。 越低越好。
+    DMatch.trainIdx - 训练描述符中描述符的索引
+    DMatch.queryIdx - 查询描述符中描述符的索引
+    DMatch.imgIdx - 训练图像的索引。
+    """
 
     """
     去除错误匹配，0.5是系数，系数大小不同，匹配的结果页不同
@@ -155,6 +159,9 @@ def feature_matching(templatePicPath, targetPicPath):
     index = int(len(goodMatches) / 2)
     # queryIdx是目标图像的描述符索引
     x, y = kp1[goodMatches[index].queryIdx].pt
+    # 将识别结果绘制在模板上并保存
+    cv2.rectangle(tem, (int(x), int(y)), (int(x) + 30, int(y) + 30), (0, 0, 255), 5)
+    cv2.imwrite('识别结果.jpg', tem)
     return [int(x), int(y)]
 
 
